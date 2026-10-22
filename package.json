@@ -1,0 +1,53 @@
+{
+	"name": "n8n-nodes-mountable",
+	"version": "0.1.0",
+	"description": "n8n nodes for Mountable, a persistent filesystem for AI agents: create filesystems, set limits, mint mount tickets and run workflows when files change.",
+	"license": "MIT",
+	"homepage": "https://mountable.io/docs/workflows",
+	"keywords": [
+		"n8n-community-node-package",
+		"mountable",
+		"filesystem",
+		"ai-agents"
+	],
+	"author": {
+		"name": "Mountable",
+		"email": "support@mountable.io"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/writeitai/n8n-nodes-mountable.git"
+	},
+	"scripts": {
+		"build": "n8n-node build",
+		"build:watch": "tsc --watch",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"test": "node --test test/*.test.js"
+	},
+	"files": [
+		"dist",
+		"!dist/tsconfig.tsbuildinfo"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"strict": true,
+		"credentials": [
+			"dist/credentials/MountableApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/Mountable/Mountable.node.js",
+			"dist/nodes/MountableTrigger/MountableTrigger.node.js"
+		]
+	},
+	"devDependencies": {
+		"@n8n/node-cli": "^0.53.4",
+		"eslint": "9.32.0",
+		"prettier": "3.6.2",
+		"typescript": "5.9.2"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}

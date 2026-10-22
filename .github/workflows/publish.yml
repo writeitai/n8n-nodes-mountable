@@ -1,0 +1,32 @@
+# Publishes to npm when a version tag (v0.1.0) is pushed.
+# npm trusted publishing (OIDC): no token or secret. Configure the trusted
+# publisher on npmjs.com for this repository, workflow publish.yml and the
+# environment "release". --provenance adds the attestation n8n requires.
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # Trusted publishing needs npm 11.5.1 or later.
+      - run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npm test
+      - run: npm publish --provenance --access public
