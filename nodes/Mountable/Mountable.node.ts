@@ -248,9 +248,9 @@ export class Mountable implements INodeType {
 						name: 'max_duration_seconds',
 						type: 'number',
 						default: 3600,
-						typeOptions: { minValue: 60, maxValue: 604800 },
+						typeOptions: { minValue: 60, maxValue: 31536000 },
 						description:
-							'The templates send 3600. The API allows 60 to 604800 and defaults to 43200 when left out.',
+							'The templates send 3600. The API allows 60 to 31536000 (365 days) and defaults to 43200 when left out.',
 					},
 				],
 			},
