@@ -32,16 +32,16 @@ const limitFields = (leaveOut: {
 		name: 'mutations_per_minute',
 		type: 'number',
 		default: 1000,
-		typeOptions: { minValue: 1, maxValue: 1000 },
-		description: 'Creates, deletes, renames and writes per minute, 1 to 1000. ' + leaveOut.changes,
+		typeOptions: { minValue: 1, maxValue: 2147483647 },
+		description: 'Creates, deletes, renames and writes per minute, 1 to 2147483647. ' + leaveOut.changes,
 	},
 	{
 		displayName: 'Entry Quota',
 		name: 'entry_quota',
 		type: 'number',
 		default: 1000000,
-		typeOptions: { minValue: 10000, maxValue: 1000000 },
-		description: 'Files, directories and links, 10000 to 1000000. ' + leaveOut.entries,
+		typeOptions: { minValue: 1, maxValue: 1000000 },
+		description: 'Files, directories and links, 1 to 1000000. ' + leaveOut.entries,
 	},
 	{
 		displayName: 'Monthly Spending Cap (Cents)',
@@ -58,8 +58,8 @@ const limitFields = (leaveOut: {
 		name: 'byte_quota',
 		type: 'number',
 		default: 107374182400,
-		typeOptions: { minValue: 1073741824, maxValue: 107374182400 },
-		description: '1073741824 (1 GiB) to 107374182400 (100 GiB). ' + leaveOut.bytes,
+		typeOptions: { minValue: 1, maxValue: 107374182400 },
+		description: '1 byte to 107374182400 (100 GiB). ' + leaveOut.bytes,
 	},
 ];
 
@@ -144,7 +144,7 @@ export class Mountable implements INodeType {
 				default: {},
 				displayOptions: show('filesystem', ['create']),
 				options: limitFields({
-					changes: "Leave out for the platform's 1000.",
+					changes: 'Leave out for no limit.',
 					entries: 'Leave out for the default, 1000000.',
 					cap: 'Leave out for no cap.',
 					bytes: 'Leave out for the default, 100 GiB.',
