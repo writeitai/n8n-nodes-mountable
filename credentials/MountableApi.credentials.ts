@@ -17,13 +17,14 @@ export class MountableApi implements ICredentialType {
 
 	properties: INodeProperties[] = [
 		{
-			displayName: 'API Key',
+			displayName: 'API Key or Management Key',
 			name: 'apiKey',
 			type: 'string',
 			typeOptions: { password: true },
 			required: true,
 			default: '',
-			description: 'Create an API key at https://mountable.io/app',
+			description:
+				'A management key (mtblm_...) creates filesystems, sets their limits and grants API keys access. An API key (mtbl_...) creates mount sessions and webhooks and runs the trigger. Use one credential per key. Create keys at https://mountable.io/app',
 		},
 	];
 

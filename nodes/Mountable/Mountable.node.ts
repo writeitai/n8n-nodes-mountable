@@ -72,7 +72,7 @@ export class Mountable implements INodeType {
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 		description:
-			'Create Mountable filesystems, set their limits and usage, mint one-time mount tickets and manage file-change webhooks',
+			'Create mountable.io filesystems, set their limits, grant API keys access, read usage, mint one-time mount tickets and manage file-change webhooks',
 		defaults: { name: 'Mountable' },
 		usableAsTool: true,
 		inputs: [NodeConnectionTypes.Main],
@@ -104,8 +104,8 @@ export class Mountable implements INodeType {
 					{
 						name: 'Who Am I',
 						value: 'whoAmI',
-						description: "The API key's creator, the key and its organisation",
-						action: 'Get the API key and its organisation',
+						description: "The key's creator, the key and its organisation",
+						action: 'Get the key and its organisation',
 					},
 				],
 				default: 'whoAmI',
@@ -119,12 +119,36 @@ export class Mountable implements INodeType {
 				noDataExpression: true,
 				displayOptions: { show: { resource: ['filesystem'] } },
 				options: [
-					{ name: 'Create', value: 'create', action: 'Create a filesystem' },
+					{
+						name: 'Create',
+						value: 'create',
+						description: 'Needs a credential with a management key (mtblm_...)',
+						action: 'Create a filesystem',
+					},
 					{ name: 'Get Many', value: 'getAll', action: 'Get many filesystems' },
 					{ name: 'Get Usage', value: 'getUsage', action: 'Get the usage of a filesystem' },
-					{ name: 'Set Limits', value: 'setLimits', action: 'Set the limits of a filesystem' },
+					{
+						name: 'Grant API Key Access',
+						value: 'grantApiKey',
+						description: 'Needs a credential with a management key (mtblm_...)',
+						action: 'Grant an API key access to a filesystem',
+					},
+					{
+						name: 'Set Limits',
+						value: 'setLimits',
+						description: 'Needs a credential with a management key (mtblm_...)',
+						action: 'Set the limits of a filesystem',
+					},
 				],
 				default: 'create',
+			},
+			{
+				displayName:
+					'Use a credential with a management key (mtblm_...). An API key gets 403 management_key_required.',
+				name: 'managementKeyNotice',
+				type: 'notice',
+				default: '',
+				displayOptions: show('filesystem', ['create', 'grantApiKey', 'setLimits']),
 			},
 			{
 				displayName: 'Name',
@@ -152,7 +176,30 @@ export class Mountable implements INodeType {
 			},
 			{
 				...filesystemLocator,
-				displayOptions: show('filesystem', ['getUsage', 'setLimits']),
+				displayOptions: show('filesystem', ['getUsage', 'grantApiKey', 'setLimits']),
+			},
+			{
+				displayName: 'API Key ID',
+				name: 'principalId',
+				type: 'string',
+				required: true,
+				default: '',
+				displayOptions: show('filesystem', ['grantApiKey']),
+				description:
+					"The API key's ID, from the api_key object that Account → Who Am I returns with the API key's credential. A filesystem created with a management key has no API key access until you grant it.",
+			},
+			{
+				displayName: 'Mode',
+				name: 'mode',
+				type: 'options',
+				required: true,
+				options: [
+					{ name: 'Read-Write', value: 'rw' },
+					{ name: 'Read-Only', value: 'ro' },
+				],
+				default: 'rw',
+				displayOptions: show('filesystem', ['grantApiKey']),
+				description: 'Granting again changes the mode',
 			},
 			{
 				displayName: 'Limits',
@@ -203,7 +250,7 @@ export class Mountable implements INodeType {
 			},
 			{
 				displayName:
-					'Send the sandbox only the one-time ticket from the output. The API key stays in this n8n credential and never goes to the sandbox.',
+					'Use a credential with an API key (mtbl_...). Send the sandbox only the one-time ticket from the output. The API key stays in this n8n credential and never goes to the sandbox.',
 				name: 'ticketNotice',
 				type: 'notice',
 				default: '',
@@ -274,10 +321,16 @@ export class Mountable implements INodeType {
 					{
 						name: 'Create',
 						value: 'create',
-						description: 'The output holds the webhook secret (whsec_...), returned once',
+						description:
+							'Needs a credential with an API key (mtbl_...). The output holds the webhook secret (whsec_...), returned once.',
 						action: 'Create a webhook',
 					},
-					{ name: 'Delete', value: 'delete', action: 'Delete a webhook' },
+					{
+						name: 'Delete',
+						value: 'delete',
+						description: 'Needs a credential with an API key (mtbl_...)',
+						action: 'Delete a webhook',
+					},
 				],
 				default: 'create',
 			},
@@ -365,6 +418,17 @@ export class Mountable implements INodeType {
 						this,
 						'GET',
 						`${filesystemPath(await org(), filesystemId())}/usage`,
+					);
+				} else if (resource === 'filesystem' && operation === 'grantApiKey') {
+					result = await mountableApiRequest.call(
+						this,
+						'PUT',
+						`${filesystemPath(await org(), filesystemId())}/grants`,
+						{
+							principal_type: 'api_key',
+							principal_id: this.getNodeParameter('principalId', i) as string,
+							mode: this.getNodeParameter('mode', i) as string,
+						},
 					);
 				} else if (resource === 'filesystem' && operation === 'setLimits') {
 					result = await mountableApiRequest.call(
