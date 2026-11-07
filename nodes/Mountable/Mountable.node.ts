@@ -143,8 +143,7 @@ export class Mountable implements INodeType {
 				default: 'create',
 			},
 			{
-				displayName:
-					'Use a credential with a management key (mtblm_...).',
+				displayName: 'Use a credential with a management key (mtblm_...).',
 				name: 'managementKeyNotice',
 				type: 'notice',
 				default: '',
