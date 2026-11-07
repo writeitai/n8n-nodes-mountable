@@ -48,9 +48,9 @@ it or watches it.
 ## Mountable Trigger
 
 Starts the workflow when files change in a filesystem, or in one folder of
-it. It needs a credential with an API key. Activating the workflow creates a Mountable webhook. Deactivating it
+it. It needs a credential with an API key. Activating the workflow creates a mountable.io webhook. Deactivating it
 deletes the webhook. The trigger checks each message's signature and
-refuses messages that Mountable did not sign.
+refuses messages that mountable.io did not sign.
 
 Each item is one message. `files.changed` carries `data.events`, one per
 changed path. `files.resync` means: list what you keep track of again.
