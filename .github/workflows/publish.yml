@@ -1,7 +1,8 @@
 # Publishes to npm when a version tag (v0.1.0) is pushed.
-# npm trusted publishing (OIDC): no token or secret. Configure the trusted
-# publisher on npmjs.com for this repository, workflow publish.yml and the
-# environment "release". --provenance adds the attestation n8n requires.
+# npm trusted publishing (OIDC): no token or secret. The first publish and
+# the trusted publisher (this repository, workflow publish.yml, environment
+# "release") come from scripts/bootstrap-npm.sh, run once by the package
+# owner. --provenance adds the attestation n8n requires.
 name: Publish
 
 on:

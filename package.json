@@ -1,7 +1,7 @@
 {
 	"name": "n8n-nodes-mountable",
 	"version": "0.1.0",
-	"description": "n8n nodes for mountable.io, a persistent filesystem for AI agents: create filesystems, set limits, grant API keys, mint mount tickets and run workflows when files change.",
+	"description": "n8n nodes for mountable.io, a persistent filesystem for AI agents: create filesystems, set limits, grant API keys access, mint mount tickets and run workflows when files change.",
 	"license": "MIT",
 	"homepage": "https://mountable.io/docs/workflows",
 	"keywords": [
