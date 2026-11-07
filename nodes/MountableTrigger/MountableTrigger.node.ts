@@ -41,7 +41,7 @@ export class MountableTrigger implements INodeType {
 		properties: [
 			{
 				displayName:
-					'Mountable calls this workflow over https on port 443, so n8n must be reachable from the internet. Each item is one message: files.changed with data.events, or files.resync (list what you keep track of again). Deliveries are at least once: handle each path idempotently.',
+					'Use a credential with an API key (mtbl_...): it creates and deletes the webhook. Mountable calls this workflow over https on port 443, so n8n must be reachable from the internet. Each item is one message: files.changed with data.events, or files.resync (list what you keep track of again). Deliveries are at least once: handle each path idempotently.',
 				name: 'deliveryNotice',
 				type: 'notice',
 				default: '',

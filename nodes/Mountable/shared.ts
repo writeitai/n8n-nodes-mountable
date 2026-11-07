@@ -33,14 +33,15 @@ export async function mountableApiRequest(
 	}
 }
 
-// An API key belongs to one organisation: GET /me returns it as api_key.org_id.
+// A key belongs to one organisation: GET /me returns it as api_key.org_id
+// or management_key.org_id, by the kind of key.
 export async function getOrgId(this: Context): Promise<string> {
 	const me = await mountableApiRequest.call(this, 'GET', '/me');
-	const orgId = me?.api_key?.org_id;
+	const orgId = me?.api_key?.org_id ?? me?.management_key?.org_id;
 	if (!orgId) {
 		throw new NodeOperationError(
 			this.getNode(),
-			'Mountable did not return an organisation for this credential. Use an API key from https://mountable.io/app.',
+			'mountable.io did not return an organisation for this credential. Use an API key or a management key from https://mountable.io/app.',
 		);
 	}
 	return orgId as string;
