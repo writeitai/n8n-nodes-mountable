@@ -20,9 +20,28 @@ else
   npm publish --access public
 fi
 
-if npm trust list "$name" 2>/dev/null | grep -q 'publish\.yml'; then
-  echo "the trusted publisher for publish.yml is already set"
-else
-  npm trust github "$name" --file publish.yml --repository writeitai/n8n-nodes-mountable \
-    --environment release --allow-publish --yes
-fi
+# The trust must name this repository, publish.yml and the environment
+# "release", with publish permission. Any other configuration stops the
+# script rather than being replaced.
+trust=$(npm trust list "$name" --json 2>/dev/null || true)
+state=$(TRUST="$trust" node -e '
+  const text = (process.env.TRUST || "").trim();
+  let items = [];
+  if (text) {
+    try { items = [].concat(JSON.parse(text)); }
+    catch { items = JSON.parse("[" + text.replace(/}\s*{/g, "},{") + "]"); }
+  }
+  const ok = items.some((t) => t.file === "publish.yml" &&
+    t.repository === "writeitai/n8n-nodes-mountable" && t.environment === "release" &&
+    [].concat(t.permissions || []).includes("createPackage"));
+  console.log(ok ? "set" : items.length ? "other" : "none");
+')
+case "$state" in
+  set) echo "the trusted publisher for publish.yml is already set" ;;
+  other) echo "npm has a different trusted publisher for $name; fix it by hand" >&2; exit 1 ;;
+  none)
+    npm trust github "$name" --file publish.yml --repository writeitai/n8n-nodes-mountable \
+      --environment release --allow-publish --yes
+    # npm expires a trust that has not published within two days.
+    echo "Now release the next version through publish.yml within two days." ;;
+esac

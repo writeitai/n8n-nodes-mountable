@@ -61,7 +61,9 @@ n8n must be reachable from the internet over https.
 Bump `version` in `package.json` in a pull request, then push the tag
 `v<version>`: `.github/workflows/publish.yml` publishes it to npm with
 provenance through trusted publishing. The very first publish and the trusted
-publisher itself were set up once with `scripts/bootstrap-npm.sh`.
+publisher itself were set up once with `scripts/bootstrap-npm.sh`, followed
+within two days by a tagged release (npm expires a trust that has not
+published by then).
 
 ## Links
 
