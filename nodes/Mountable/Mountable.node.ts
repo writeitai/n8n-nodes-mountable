@@ -144,7 +144,7 @@ export class Mountable implements INodeType {
 			},
 			{
 				displayName:
-					'Use a credential with a management key (mtblm_...). An API key gets 403 management_key_required.',
+					'Use a credential with a management key (mtblm_...).',
 				name: 'managementKeyNotice',
 				type: 'notice',
 				default: '',
@@ -199,7 +199,7 @@ export class Mountable implements INodeType {
 				],
 				default: 'rw',
 				displayOptions: show('filesystem', ['grantApiKey']),
-				description: 'Granting again changes the mode',
+				description: 'Webhooks need Read-Write. Granting again changes the mode.',
 			},
 			{
 				displayName: 'Limits',

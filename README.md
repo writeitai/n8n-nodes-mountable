@@ -19,9 +19,8 @@ one. Create them at [mountable.io/app](https://mountable.io/app):
 - an **API key** (`mtbl_…`) creates mount sessions and webhooks and runs the
   trigger.
 
-Both read usage and list filesystems. An operation run with the wrong kind
-fails with `403 management_key_required` or `403 api_key_required`. A key
-belongs to one organisation; the nodes work in that organisation.
+Both read usage and list filesystems. A key belongs to one organisation; the
+nodes work in that organisation.
 
 A filesystem created with a management key has no API key access: run
 **Filesystem → Grant API Key Access** with the API key's ID (**Who Am I** with
@@ -37,7 +36,7 @@ it or watches it.
 - **Filesystem → Get Many**: the organisation's filesystems.
 - **Filesystem → Get Usage**: storage, entries and traffic of a filesystem.
 - **Filesystem → Grant API Key Access** (management key): give an API key
-  read-write or read-only access to a filesystem.
+  read-write or read-only access to a filesystem. Webhooks need read-write.
 - **Filesystem → Set Limits** (management key): change a filesystem's cap
   and quotas.
 - **Mount Session → Create** (API key): a one-time mount ticket for a
